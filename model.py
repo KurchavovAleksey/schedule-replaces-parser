@@ -38,7 +38,9 @@ class Replace:
 
 
 def replace_from_tr(td: bs4.Tag) -> Replace:
-    return Replace(*[getattr(i, 'string') for i in td.contents])
+    args = [getattr(i, 'string') for i in td.contents]
+    args[0] = SubLessonsNumbers(int(args[0]))
+    return Replace(*args)
 
 
 @dataclass
