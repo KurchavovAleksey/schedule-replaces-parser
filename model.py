@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import IntEnum
 
 import bs4
 
 
-class SubLessonsNumbers(Enum):
+class SubLessonsNumbers(IntEnum):
     first = 1
     second = 2
     third = 3
@@ -17,13 +17,13 @@ class SubLessonsNumbers(Enum):
     tenth = 10
 
 
-class LessonsNumbers(Enum):
-    """TODO: Implement deduplication"""
-    first_lesson = {SubLessonsNumbers.first, SubLessonsNumbers.second}
-    second_lesson = {SubLessonsNumbers.third, SubLessonsNumbers.fourth}
-    third_lesson = {SubLessonsNumbers.fifth, SubLessonsNumbers.sixth}
-    fifth_lesson = {SubLessonsNumbers.seventh, SubLessonsNumbers.eighth}
-    sixth_lesson = {SubLessonsNumbers.ninth, SubLessonsNumbers.tenth}
+# class LessonsNumbers(Enum):
+#     """TODO: Implement deduplication"""
+#     first_lesson = {SubLessonsNumbers.first, SubLessonsNumbers.second}
+#     second_lesson = {SubLessonsNumbers.third, SubLessonsNumbers.fourth}
+#     third_lesson = {SubLessonsNumbers.fifth, SubLessonsNumbers.sixth}
+#     fifth_lesson = {SubLessonsNumbers.seventh, SubLessonsNumbers.eighth}
+#     sixth_lesson = {SubLessonsNumbers.ninth, SubLessonsNumbers.tenth}
 
 
 @dataclass
@@ -38,8 +38,10 @@ class Replace:
 
 
 def replace_from_tr(td: bs4.Tag) -> Replace:
-    args = [getattr(i, 'string') for i in td.contents]
-    args[0] = SubLessonsNumbers(int(args[0]))
+    args = (getattr(i, 'string') for i in td.contents)
+    args = list(map(lambda x: str(x) if isinstance(x, bs4.NavigableString) else x, args))
+    args[0] = SubLessonsNumbers(int(args[0]))  # lesson num
+
     return Replace(*args)
 
 
