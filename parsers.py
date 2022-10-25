@@ -34,6 +34,7 @@ def parse_replaces(page: bytes) -> model.Replaces:
 
     expecting_group_header = False
     current_group: Optional[int] = None
+    structure_incorrect = False
 
     for tr in the_table:
         td: bs4.element.Tag = tr.contents[0]
@@ -51,22 +52,41 @@ def parse_replaces(page: bytes) -> model.Replaces:
 
         elif td_class == 'section':  # Group number row
             logger.debug(f'section: {td}')
-            current_group = int(td.string)
-            groups[current_group] = model.GroupReplaces(current_group, dict())
-            expecting_group_header = True  # After section goes group header
+            try:
+                current_group = int(td.string)
+
+            except ValueError:
+                structure_incorrect = True
+                logger.opt(exception=True).warning(f"Can't parse section td: {td!r}")
+                continue
+
+            else:
+                groups[current_group] = model.GroupReplaces(current_group, dict())
+                expecting_group_header = True  # After section goes group header
 
         elif td_class == 'content':
             if not expecting_group_header:
                 logger.debug(f'Group row: {tr}')
-                replace = model.replace_from_tr(tr)
-                if current_group is None:
-                    logger.warning('Current group is None', page)
+                try:
+                    replace = model.replace_from_tr(tr)
 
-                groups[current_group].group_replaces.update({replace.lesson_number: replace})
+                except ValueError:
+                    structure_incorrect = True
+                    logger.opt(exception=True).warning(f"Couldn't parse tr: {tr!r}")
+                    continue
+
+                else:
+                    if current_group is None:
+                        logger.warning('Current group is None', page)
+
+                    groups[current_group].group_replaces.update({replace.lesson_number: replace})
 
             else:
                 expecting_group_header = False
                 if td.string != '№ пары':
                     logger.warning('expecting group header and do not got one', page)
+
+    if structure_incorrect:
+        logger.info(f'Incorrect structure detected')
 
     return model.Replaces(header=header, groups=groups)
