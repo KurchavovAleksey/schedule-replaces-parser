@@ -45,7 +45,7 @@ def parse_replaces(page: bytes) -> model.Replaces:
             if header is not None:
                 logger.warning('Met second header', page)
 
-            header = td.string
+            header = str(td.string)
 
         elif td_class == 'footer':
             logger.debug(f'Footer: {td.string}')
