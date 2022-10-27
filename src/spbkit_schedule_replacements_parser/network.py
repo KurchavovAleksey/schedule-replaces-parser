@@ -2,7 +2,7 @@ from functools import partial
 
 import requests
 
-import parsers
+from . import parsers
 
 SPBKIT_SITE_URL = "http://www.spbkit.edu.ru/index.php"
 SPBKIT_SITE_PARAMS = {"option": "com_content", "task": "view", "id": "28", "Itemid": "65"}

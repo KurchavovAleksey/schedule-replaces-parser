@@ -1,4 +1,4 @@
-import network
-import model
-import parsers
-from printers import printer
+from . import network
+from . import model
+from . import parsers
+from .printers import printer

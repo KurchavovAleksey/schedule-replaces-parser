@@ -4,7 +4,7 @@ from typing import Optional
 import bs4
 from loguru import logger
 
-import model
+from . import model
 
 
 def parse_replaces_base(page: str) -> str:
