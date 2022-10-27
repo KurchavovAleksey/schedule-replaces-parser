@@ -52,6 +52,11 @@ def parse_replaces(page: bytes) -> model.Replaces:
 
         elif td_class == 'section':  # Group number row
             logger.debug(f'section: {td}')
+            if td.string is None:
+                structure_incorrect = True
+                logger.warning(f'Empty section: {td}')
+                continue
+
             try:
                 current_group = int(td.string)
 
@@ -61,7 +66,7 @@ def parse_replaces(page: bytes) -> model.Replaces:
                 continue
 
             else:
-                groups[current_group] = model.GroupReplaces(current_group, dict())
+                groups[current_group] = model.GroupReplaces(current_group, list())
                 expecting_group_header = True  # After section goes group header
 
         elif td_class == 'content':
@@ -79,7 +84,7 @@ def parse_replaces(page: bytes) -> model.Replaces:
                     if current_group is None:
                         logger.warning('Current group is None', page)
 
-                    groups[current_group].group_replaces.update({replace.lesson_number: replace})
+                    groups[current_group].group_replaces.append(replace)
 
             else:
                 expecting_group_header = False

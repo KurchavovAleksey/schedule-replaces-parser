@@ -21,7 +21,7 @@ def _replace_printer(replace: model.Replace) -> str:
 
 def _group_replaces_printer(group_replaces: model.GroupReplaces) -> str:
     res = f'{group_replaces.group_number}\n'
-    for replace in group_replaces.group_replaces.values():
+    for replace in group_replaces.group_replaces:
         res += f'{_replace_printer(replace)}\n'
 
     return res

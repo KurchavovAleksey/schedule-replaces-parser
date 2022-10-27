@@ -1,10 +1,11 @@
 from dataclasses import dataclass, field
-from enum import IntEnum
+from enum import Enum
 
 import bs4
 
 
-class SubLessonsNumbers(IntEnum):
+class SubLessonsNumbers(Enum):
+    none = None
     first = 1
     second = 2
     third = 3
@@ -40,7 +41,16 @@ class Replace:
 def replace_from_tr(td: bs4.Tag) -> Replace:
     args = (getattr(i, 'string') for i in td.contents)
     args = list(map(lambda x: str(x) if isinstance(x, bs4.NavigableString) else x, args))
-    args[0] = SubLessonsNumbers(int(args[0]))  # lesson num
+
+    if args[0] is None:
+        args[0] = SubLessonsNumbers(args[0])  # lesson num
+
+    else:
+        args[0] = SubLessonsNumbers(int(args[0]))  # lesson num
+
+    if len(args) == 4:  # Default is 5, probably classroom is missing
+        if None in (args[2], args[3]) or 'отмена пары' in (args[2], args[3]):
+            args.append(None)  # classroom is None
 
     return Replace(*args)
 
@@ -48,7 +58,7 @@ def replace_from_tr(td: bs4.Tag) -> Replace:
 @dataclass
 class GroupReplaces:
     group_number: int
-    group_replaces: dict[SubLessonsNumbers, Replace]
+    group_replaces: list[Replace]
 
 
 @dataclass
