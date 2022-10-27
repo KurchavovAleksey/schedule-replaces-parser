@@ -28,7 +28,7 @@ def fetch_spbkit_page() -> str:
 
 
 def fetch_replaces_page() -> bytes:
-    replaces_url = fetch_replaces_url() + REPLACES_ENDPOINT
+    replaces_url = fetch_replaces_url()
     return fetch(the_session, replaces_url)
 
 
