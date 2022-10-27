@@ -28,12 +28,16 @@ def fetch_spbkit_page() -> str:
 
 
 def fetch_replaces_page() -> bytes:
+    replaces_url = fetch_replaces_url() + REPLACES_ENDPOINT
+    return fetch(the_session, replaces_url)
+
+
+def fetch_replaces_url() -> str:
     spbkit_page = fetch_spbkit_page()
     replaces_base = parsers.parse_replaces_base(spbkit_page)
 
     replaces_url = replaces_base + REPLACES_ENDPOINT
-
-    return fetch(the_session, replaces_url)
+    return replaces_url
 
 
 the_session = get_session()
