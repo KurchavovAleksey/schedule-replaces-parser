@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spbkit_schedule_replacements_parser"
-version = "0.0.1"
+version = "0.0.2"
 description = "A toolset to parse schedule replacements of SPBKIT"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 dependencies = ["requests", "beautifulsoup4", "loguru"]
 license = {text = "MIT"}

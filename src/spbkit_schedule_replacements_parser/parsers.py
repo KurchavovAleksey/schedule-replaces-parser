@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 from typing import Optional
+import re
 
 import bs4
 from loguru import logger
@@ -58,7 +59,10 @@ def parse_replaces(page: bytes) -> model.Replaces:
                 continue
 
             try:
-                current_group = int(td.string)
+                stringed_group = str(td.string)
+                stringed_group = re.sub('\(.*\)', '', stringed_group)  # group number can be like `121(1)`
+                # The lib does not handle such cases and strip it to `121`, for now at least (soon TM)
+                current_group = int(stringed_group)
 
             except ValueError:
                 structure_incorrect = True
