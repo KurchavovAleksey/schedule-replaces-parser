@@ -52,7 +52,7 @@ def replace_from_tr(td: bs4.Tag) -> Replace:
         if None in (args[2], args[3]) or 'отмена пары' in (args[2], args[3]):
             args.append(None)  # classroom is None
 
-    return Replace(*args)
+    return Replace(*args[:5])  # Slice :5 is workaround for incorrect structure (i.e. Замены Пятница 18.11.22 четная)
 
 
 @dataclass
