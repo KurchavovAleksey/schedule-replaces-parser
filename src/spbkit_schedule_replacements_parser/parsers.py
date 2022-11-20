@@ -79,7 +79,7 @@ def parse_replaces(page: bytes) -> model.Replaces:
                 try:
                     replace = model.replace_from_tr(tr)
 
-                except ValueError:
+                except (ValueError, TypeError):
                     structure_incorrect = True
                     logger.opt(exception=True).warning(f"Couldn't parse tr: {tr!r}")
                     continue

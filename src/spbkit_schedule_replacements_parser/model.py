@@ -48,9 +48,8 @@ def replace_from_tr(td: bs4.Tag) -> Replace:
     else:
         args[0] = SubLessonsNumbers(int(args[0]))  # lesson num
 
-    if len(args) == 4:  # Default is 5, probably classroom is missing
-        if None in (args[2], args[3]) or 'отмена пары' in (args[2], args[3]):
-            args.append(None)  # classroom is None
+    if len(args) == 4:  # Workaround: Default is 5, probably classroom is missing
+        args.append(None)  # Then classroom is None
 
     return Replace(*args[:5])  # Slice :5 is workaround for incorrect structure (i.e. Замены Пятница 18.11.22 четная)
 
